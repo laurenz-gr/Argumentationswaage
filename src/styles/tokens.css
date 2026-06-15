@@ -1,0 +1,88 @@
+/* Design tokens from design-system.html */
+:root {
+  --bg: #f4f4f2;
+  --ink: #1a1a1a;
+  --muted: #5a5a5a;
+  --paper: #fcfcfa;
+  --border: #1a1a1a;
+  --shadow: #1a1a1a;
+  --accent: #ff6b35;
+  --accent-ink: #1a1a1a;
+  --accent2: #1557ff;
+  --on-accent: #fcfcfc;
+  --chip: #fcfcfa;
+  --chip-ink: #1a1a1a;
+  --danger: #be1e2d;
+  --focus: #0f62ff;
+  --placeholder: #6a6a6a;
+  --mint: #028f27;
+  --violet: #6b3fa0;
+  --amber: #c98a00;
+
+  --arg-default-bg: var(--paper);
+  --arg-default-ink: var(--ink);
+  --arg-accent-bg: #ffd8c8;
+  --arg-accent-ink: #1a1a1a;
+  --arg-accent2-bg: #d7e3ff;
+  --arg-accent2-ink: #1a1a1a;
+  --arg-danger-bg: #ffd4d8;
+  --arg-danger-ink: #1a1a1a;
+  --arg-mint-bg: #d4f5de;
+  --arg-mint-ink: #1a1a1a;
+  --arg-violet-bg: #eadcff;
+  --arg-violet-ink: #1a1a1a;
+  --arg-amber-bg: #ffe8b8;
+  --arg-amber-ink: #1a1a1a;
+
+  --sh-1: 3px 3px 0 var(--shadow);
+  --sh-2: 4px 4px 0 var(--shadow);
+  --sh-3: 6px 6px 0 var(--shadow);
+  --sh-4: 8px 8px 0 var(--shadow);
+
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 10px;
+  --r-pill: 999px;
+
+  --bw: 3px;
+  --bw-thin: 2px;
+
+  --font-display: 'Bebas Neue', Impact, sans-serif;
+  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+.dark {
+  --bg: #1a1c22;
+  --ink: #f4f4f2;
+  --muted: #bcc0c8;
+  --paper: #262932;
+  --border: #f4f4f2;
+  --shadow: #0a0b0e;
+  --accent: #ff7a47;
+  --accent-ink: #1a1a1a;
+  --accent2: #2f67d8;
+  --on-accent: #fcfcfc;
+  --chip: #2e323d;
+  --chip-ink: #f4f4f2;
+  --danger: #d63848;
+  --focus: #9dc0ff;
+  --placeholder: #9aa0aa;
+  --mint: #35b35a;
+  --violet: #9a6fd4;
+  --amber: #e0a52e;
+
+  --arg-default-bg: var(--paper);
+  --arg-default-ink: var(--ink);
+  --arg-accent-bg: #5a2f22;
+  --arg-accent-ink: #ffe8de;
+  --arg-accent2-bg: #1f356f;
+  --arg-accent2-ink: #e4edff;
+  --arg-danger-bg: #5a1f28;
+  --arg-danger-ink: #ffe8eb;
+  --arg-mint-bg: #1f4a2d;
+  --arg-mint-ink: #e4ffec;
+  --arg-violet-bg: #3a2858;
+  --arg-violet-ink: #f0e6ff;
+  --arg-amber-bg: #5a4310;
+  --arg-amber-ink: #fff2d4;
+}
