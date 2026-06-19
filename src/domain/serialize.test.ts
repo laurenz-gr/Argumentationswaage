@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseMarkdownLight } from '@/components/MarkdownText';
+import { parseMarkdownLight } from '@/domain/markdown';
 import { deserializeProject, serializeProject } from './serialize';
 import { createEmptyProject } from './model';
 

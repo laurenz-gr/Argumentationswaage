@@ -48,8 +48,11 @@ a {
 
 .app-shell {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+    env(safe-area-inset-left);
 }
 
 .app-main {
@@ -117,7 +120,7 @@ a {
 
 @media (max-width: 680px) {
   .app-main {
-    padding: 10px 10px 20px;
+    padding: 10px 10px calc(20px + env(safe-area-inset-bottom));
   }
 
   .display-title {

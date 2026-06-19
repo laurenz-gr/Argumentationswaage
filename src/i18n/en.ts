@@ -7,6 +7,8 @@ export const en: Record<TranslationKey, string> = {
   contra: 'Contra',
   staging: 'New arguments',
   addArgument: 'Add argument',
+  undo: 'Undo',
+  redo: 'Redo',
   clearAll: 'Clear all',
   saveProject: 'Save project',
   loadProject: 'Load project',
@@ -38,6 +40,8 @@ export const en: Record<TranslationKey, string> = {
   stagingEmptyTitle: 'No arguments yet',
   stagingEmptyText:
     'Start with “Add argument”, then drag the cards onto the pro or contra side of the scale.',
+  showOptions: 'Show options',
+  hideOptions: 'Hide options',
   trash: 'Trash',
   zenOn: 'Hide controls',
   zenOff: 'Show controls',
@@ -49,7 +53,6 @@ export const en: Record<TranslationKey, string> = {
   exportModalTitle: 'Save as image',
   downloadImage: 'Download image',
   size: 'Size',
-  fileFormat: 'File format',
   importSuccess: 'Project loaded',
   importError: 'Could not load file',
   exportSuccess: 'Export created',
@@ -63,7 +66,7 @@ export const en: Record<TranslationKey, string> = {
   createdWith: 'Created with Argumentationswaage',
   dataPrivacyTitle: 'Privacy',
   dataPrivacyText:
-    'Arguments stay in the browser only. Only settings such as language and theme are stored locally.',
+    'All data stays in your browser – nothing is sent to a server. Arguments and settings are stored on this device and restored next time you open the app.',
   imprintTitle: 'Imprint',
   imprintText: 'Argumentationswaage – classroom tool for visualizing arguments.',
 };

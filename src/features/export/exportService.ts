@@ -10,7 +10,6 @@ import {
   serializeProject,
 } from '@/domain/serialize';
 import {
-  dataUrlToBytes,
   embedTextInPngDataUrl,
   extractTextFromPngBytes,
 } from '@/domain/png';
@@ -44,13 +43,19 @@ export async function exportBoardPng(
   scale = 2,
 ): Promise<void> {
   const { toPng } = await import('html-to-image');
-  const dataUrl = await toPng(element, {
-    cacheBust: true,
-    pixelRatio: scale,
-    style: {
-      transform: 'none',
-    },
-  });
+  element.classList.add('is-exporting');
+  let dataUrl: string;
+  try {
+    dataUrl = await toPng(element, {
+      cacheBust: true,
+      pixelRatio: scale,
+      style: {
+        transform: 'none',
+      },
+    });
+  } finally {
+    element.classList.remove('is-exporting');
+  }
 
   const enriched = embedTextInPngDataUrl(
     dataUrl,
@@ -62,12 +67,6 @@ export async function exportBoardPng(
   anchor.download = `argumentationswaage-${formatStamp()}.png`;
   anchor.click();
 }
-
-export function isPngWithProject(bytes: Uint8Array): boolean {
-  return extractTextFromPngBytes(bytes, EMBED_KEY) !== null;
-}
-
-export { dataUrlToBytes };
 
 function formatStamp(): string {
   const now = new Date();

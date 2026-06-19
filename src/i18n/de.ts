@@ -5,6 +5,8 @@ export const de = {
   contra: 'Contra',
   staging: 'Neue Argumente',
   addArgument: 'Argument hinzufügen',
+  undo: 'Rückgängig',
+  redo: 'Wiederholen',
   clearAll: 'Alles löschen',
   saveProject: 'Projekt speichern',
   loadProject: 'Projekt laden',
@@ -36,6 +38,8 @@ export const de = {
   stagingEmptyTitle: 'Noch keine Argumente',
   stagingEmptyText:
     'Lege mit „Argument hinzufügen“ los und ziehe die Karten anschließend auf die Pro- oder Contra-Seite der Waage.',
+  showOptions: 'Optionen anzeigen',
+  hideOptions: 'Optionen ausblenden',
   trash: 'Papierkorb',
   zenOn: 'Knöpfe ausblenden',
   zenOff: 'Knöpfe einblenden',
@@ -47,7 +51,6 @@ export const de = {
   exportModalTitle: 'Als Bild speichern',
   downloadImage: 'Bild herunterladen',
   size: 'Größe',
-  fileFormat: 'Dateiformat',
   importSuccess: 'Projekt geladen',
   importError: 'Datei konnte nicht geladen werden',
   exportSuccess: 'Export erstellt',
@@ -61,7 +64,7 @@ export const de = {
   createdWith: 'Erstellt mit der Argumentationswaage',
   dataPrivacyTitle: 'Datenschutz',
   dataPrivacyText:
-    'Argumente werden nur lokal im Browser gehalten. Gespeichert werden nur Einstellungen wie Sprache und Farbschema.',
+    'Alle Daten bleiben lokal in deinem Browser – nichts wird an einen Server gesendet. Argumente und Einstellungen werden auf diesem Gerät gespeichert und beim nächsten Öffnen wiederhergestellt.',
   imprintTitle: 'Impressum',
   imprintText: 'Argumentationswaage – Unterrichtstool zur Visualisierung von Argumenten.',
 } as const;

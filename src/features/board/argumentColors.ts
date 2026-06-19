@@ -17,7 +17,3 @@ export function argumentColorStyle(colorId: ArgumentColorId) {
     color: colors.ink,
   };
 }
-
-export function argumentColorClass(colorId: ArgumentColorId): string {
-  return `argument-color-${colorId}`;
-}

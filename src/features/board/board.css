@@ -361,16 +361,9 @@
   flex-wrap: wrap;
 }
 
-.argument-card.is-placed .placement-row,
-.argument-card.is-placed .color-row {
+.argument-card.is-placed:not(.is-expanded) .placement-row,
+.argument-card.is-placed:not(.is-expanded) .color-row {
   display: none;
-}
-
-.argument-card.is-placed:hover .placement-row,
-.argument-card.is-placed:focus-within .placement-row,
-.argument-card.is-placed:hover .color-row,
-.argument-card.is-placed:focus-within .color-row {
-  display: flex;
 }
 
 .placement-btn {
@@ -393,6 +386,46 @@
   font-size: 11px;
   font-weight: 800;
   color: var(--muted);
+}
+
+.export-legend {
+  display: none;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.export-legend-title {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.export-legend-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.export-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.seesaw-panel.is-exporting .export-legend {
+  display: flex;
+}
+
+@media print {
+  .export-legend {
+    display: flex;
+  }
 }
 
 @container (max-width: 780px) {

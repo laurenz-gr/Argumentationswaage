@@ -2,8 +2,20 @@ import { useEffect } from 'react';
 import { BoardWorkspace } from '@/features/board/BoardWorkspace';
 import { AppToolbar } from '@/features/settings/AppToolbar';
 import { useSettingsStore } from '@/store/useSettingsStore';
+import { redoProject, undoProject } from '@/store/useProjectStore';
 import { useTranslation } from '@/i18n';
 import '@/features/settings/app.css';
+
+function isTextEntryTarget(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) {
+    return false;
+  }
+  return (
+    target.tagName === 'INPUT' ||
+    target.tagName === 'TEXTAREA' ||
+    target.isContentEditable
+  );
+}
 
 export function App() {
   const colorTheme = useSettingsStore((state) => state.colorTheme);
@@ -14,6 +26,26 @@ export function App() {
     document.documentElement.classList.toggle('dark', colorTheme === 'dark');
     document.body.classList.toggle('patterns', patternsActive);
   }, [colorTheme, patternsActive]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const modifier = event.metaKey || event.ctrlKey;
+      if (!modifier || isTextEntryTarget(event.target)) {
+        return;
+      }
+      const key = event.key.toLowerCase();
+      if (key === 'z' && !event.shiftKey) {
+        event.preventDefault();
+        undoProject();
+      } else if ((key === 'z' && event.shiftKey) || key === 'y') {
+        event.preventDefault();
+        redoProject();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   return (
     <div className="app-shell">

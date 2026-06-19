@@ -1,6 +1,6 @@
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import { Check, Copy, GripVertical, Trash2 } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, Copy, GripVertical, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import type { ArgumentColorId, ArgumentItem } from '@/domain/model';
 import { ARGUMENT_COLORS, dropZoneId } from '@/domain/model';
@@ -34,6 +34,7 @@ export function ArgumentCard({ item }: ArgumentCardProps) {
   const duplicateArgument = useProjectStore((state) => state.duplicateArgument);
   const moveArgumentToZone = useProjectStore((state) => state.moveArgumentToZone);
   const [editing, setEditing] = useState(item.text.length === 0);
+  const [optionsOpen, setOptionsOpen] = useState(false);
 
   const placeOn = (side: 'pro' | 'contra', weight: ArgumentWeight) => {
     moveArgumentToZone(item.id, dropZoneId(side, weight));
@@ -80,16 +81,16 @@ export function ArgumentCard({ item }: ArgumentCardProps) {
     ...argumentColorStyle(item.colorId),
   };
   const placed = item.side !== 'staging';
+  const optionsVisible = !placed || optionsOpen;
 
   return (
     <article
       ref={setNodeRef}
       style={style}
-      className={`argument-card${placed ? ' is-placed' : ''}${isDragging ? ' is-dragging' : ''}`}
+      className={`argument-card${placed ? ' is-placed' : ''}${optionsVisible ? ' is-expanded' : ''}${isDragging ? ' is-dragging' : ''}`}
       data-testid={`argument-${item.id}`}
       tabIndex={0}
       onKeyDown={handleKeyboardMove}
-      onKeyDownCapture={handleKeyboardMove}
     >
       <div className="argument-card-footer">
         <button
@@ -123,6 +124,18 @@ export function ArgumentCard({ item }: ArgumentCardProps) {
             {item.side === 'contra' ? '-' : '+'}
             {item.weight}
           </span>
+        ) : null}
+        {placed ? (
+          <button
+            type="button"
+            className="btn ghost icon-only options-toggle"
+            aria-label={optionsOpen ? t('hideOptions') : t('showOptions')}
+            aria-expanded={optionsOpen}
+            data-testid={`options-toggle-${item.id}`}
+            onClick={() => setOptionsOpen((open) => !open)}
+          >
+            {optionsOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          </button>
         ) : null}
       </div>
 

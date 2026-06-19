@@ -5,6 +5,7 @@ import { useTranslation } from '@/i18n';
 import { useProjectStore } from '@/store/useProjectStore';
 import { ArgumentCard } from './ArgumentCard';
 import { DropZone } from './DropZone';
+import { argumentColorStyle } from './argumentColors';
 
 function argumentsInZone(
   argumentsList: ArgumentItem[],
@@ -26,7 +27,13 @@ export function SeesawBoard() {
   const contraTitle = useProjectStore((state) => state.contraTitle);
   const setProTitle = useProjectStore((state) => state.setProTitle);
   const setContraTitle = useProjectStore((state) => state.setContraTitle);
+  const legend = useProjectStore((state) => state.legend);
   const balance = calculateBalance(argumentsList);
+
+  const usedColors = new Set(argumentsList.map((item) => item.colorId));
+  const exportLegend = legend.filter(
+    (entry) => usedColors.has(entry.colorId) && entry.label.trim().length > 0,
+  );
 
   return (
     <section className="panel seesaw-panel" id="board-export-root">
@@ -85,6 +92,23 @@ export function SeesawBoard() {
         </div>
         <div className="export-branding print-only">{t('createdWith')}</div>
       </div>
+
+      {exportLegend.length > 0 ? (
+        <div className="export-legend" aria-hidden="true">
+          <span className="export-legend-title">{t('legend')}:</span>
+          <ul className="export-legend-list">
+            {exportLegend.map((entry) => (
+              <li key={entry.colorId} className="export-legend-item">
+                <span
+                  className="color-swatch"
+                  style={argumentColorStyle(entry.colorId)}
+                />
+                <span>{entry.label}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
     </section>
   );
 }

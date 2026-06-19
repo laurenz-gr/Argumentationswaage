@@ -6,9 +6,11 @@ import {
   Palette,
   Plus,
   Printer,
+  Redo2,
   Sparkles,
   Sun,
   Trash2,
+  Undo2,
   Upload,
   Eye,
   EyeOff,
@@ -17,7 +19,12 @@ import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { useTranslation } from '@/i18n';
-import { useProjectStore } from '@/store/useProjectStore';
+import {
+  redoProject,
+  undoProject,
+  useProjectHistory,
+  useProjectStore,
+} from '@/store/useProjectStore';
 import { useSettingsStore } from '@/store/useSettingsStore';
 import { pushToast, useToast } from '@/hooks/useToast';
 import { ToastStack } from '@/components/ui/ToastStack';
@@ -40,6 +47,7 @@ export function AppToolbar() {
 
   const addArgument = useProjectStore((state) => state.addArgument);
   const clearAll = useProjectStore((state) => state.clearAll);
+  const { canUndo, canRedo } = useProjectHistory();
   const importProject = useProjectStore((state) => state.importProject);
   const getSnapshot = useProjectStore((state) => state.getSnapshot);
 
@@ -86,6 +94,24 @@ export function AppToolbar() {
             <Button variant="primary" onClick={() => addArgument()}>
               <Plus size={18} />
               <span>{t('addArgument')}</span>
+            </Button>
+            <Button
+              variant="ghost"
+              iconOnly
+              aria-label={t('undo')}
+              disabled={!canUndo}
+              onClick={() => undoProject()}
+            >
+              <Undo2 size={18} />
+            </Button>
+            <Button
+              variant="ghost"
+              iconOnly
+              aria-label={t('redo')}
+              disabled={!canRedo}
+              onClick={() => redoProject()}
+            >
+              <Redo2 size={18} />
             </Button>
           </div>
 

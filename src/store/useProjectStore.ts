@@ -1,4 +1,6 @@
-import { create } from 'zustand';
+import { create, useStore } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
+import { temporal } from 'zundo';
 import type {
   ArgumentColorId,
   ArgumentItem,
@@ -14,6 +16,37 @@ import {
   type DropZoneId,
 } from '@/domain/model';
 import { deserializeProject, normalizeProject } from '@/domain/serialize';
+
+export const PROJECT_STORAGE_KEY = 'argumentationswaage-project';
+const HISTORY_LIMIT = 50;
+
+// Storage mit In-Memory-Fallback: localStorage kann fehlen (Tests/SSR) oder
+// Ausnahmen werfen (Safari-Privatmodus, volle Quota). Dann darf die App nicht abstürzen.
+const memoryStore = new Map<string, string>();
+
+const safeStorage = {
+  getItem: (name: string): string | null => {
+    try {
+      return globalThis.localStorage?.getItem(name) ?? memoryStore.get(name) ?? null;
+    } catch {
+      return memoryStore.get(name) ?? null;
+    }
+  },
+  setItem: (name: string, value: string): void => {
+    try {
+      globalThis.localStorage?.setItem(name, value);
+    } catch {
+      memoryStore.set(name, value);
+    }
+  },
+  removeItem: (name: string): void => {
+    try {
+      globalThis.localStorage?.removeItem(name);
+    } catch {
+      memoryStore.delete(name);
+    }
+  },
+};
 
 interface ProjectStore extends ProjectState {
   addArgument: (text?: string) => void;
@@ -40,7 +73,16 @@ function syncLegend(state: ProjectState): LegendEntry[] {
 
   const existing = new Map(state.legend.map((entry) => [entry.colorId, entry.label]));
 
-  return Array.from(usedColors).map((colorId) => ({
+  // Behalte Eintrag, wenn die Farbe aktuell genutzt wird ODER bereits ein
+  // Label hat – so geht eine Beschriftung beim Umfärben/Löschen nicht verloren.
+  const colors = new Set<ArgumentColorId>(usedColors);
+  for (const [colorId, label] of existing) {
+    if (label.trim().length > 0) {
+      colors.add(colorId);
+    }
+  }
+
+  return Array.from(colors).map((colorId) => ({
     colorId,
     label: existing.get(colorId) ?? '',
   }));
@@ -57,8 +99,21 @@ function placeArgument(
   return { ...item, side, weight };
 }
 
-export const useProjectStore = create<ProjectStore>((set, get) => ({
-  ...createEmptyProject(),
+function projectData(state: ProjectState): ProjectState {
+  return {
+    version: state.version,
+    proTitle: state.proTitle,
+    contraTitle: state.contraTitle,
+    arguments: state.arguments,
+    legend: state.legend,
+  };
+}
+
+export const useProjectStore = create<ProjectStore>()(
+  temporal(
+    persist(
+      (set, get) => ({
+        ...createEmptyProject(),
 
   addArgument: (text = '') =>
     set((state) => ({
@@ -145,8 +200,46 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
 
   importProjectFromJson: (raw) => set(normalizeProject(deserializeProject(raw))),
 
-  getSnapshot: () => {
-    const { version, proTitle, contraTitle, arguments: args, legend } = get();
-    return { version, proTitle, contraTitle, arguments: args, legend };
-  },
-}));
+  getSnapshot: () => projectData(get()),
+      }),
+      {
+        name: PROJECT_STORAGE_KEY,
+        storage: createJSONStorage(() => safeStorage),
+        partialize: (state) => projectData(state),
+        merge: (persisted, current) => ({
+          ...current,
+          ...normalizeProject((persisted as ProjectState) ?? createEmptyProject()),
+        }),
+        onRehydrateStorage: () => () => {
+          // Wiederherstellen darf nicht als Undo-Schritt zählen.
+          useProjectStore.temporal.getState().clear();
+        },
+      },
+    ),
+    {
+      limit: HISTORY_LIMIT,
+      partialize: (state) => projectData(state),
+      equality: (a, b) => JSON.stringify(a) === JSON.stringify(b),
+    },
+  ),
+);
+
+export function undoProject(): void {
+  useProjectStore.temporal.getState().undo();
+}
+
+export function redoProject(): void {
+  useProjectStore.temporal.getState().redo();
+}
+
+export function useProjectHistory(): { canUndo: boolean; canRedo: boolean } {
+  const canUndo = useStore(
+    useProjectStore.temporal,
+    (state) => state.pastStates.length > 0,
+  );
+  const canRedo = useStore(
+    useProjectStore.temporal,
+    (state) => state.futureStates.length > 0,
+  );
+  return { canUndo, canRedo };
+}
